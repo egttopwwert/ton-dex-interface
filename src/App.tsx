@@ -1,58 +1,65 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import * as React from "react";
+import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 
-function App() {
+import "./App.css";
+
+import NavBar from "./features/navigation/NavBar";
+
+export default function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          
+          <Route path="charts" element={<Charts />} />
+          <Route path="swap" element={<Swap />} />
+          <Route path="liquidity" element={<Liquidity />} />
+
+          <Route index element={<Navigate to="/swap" replace={true} />}/>
+          <Route path="*" element={<Navigate to="/swap" replace={true} />}/>
+    
+        </Route>
+      </Routes>
+    </div>
+    
+  );
+}
+
+function Layout() {
+  return (
+    <React.Fragment>
+      <section>
+        <Outlet />
+      </section>
+      
+      <NavBar />
+    </React.Fragment>
+  );
+}
+
+
+
+
+function Charts() {
+  return (
+    <div>
+      <h2>!!! Charts !!!</h2>
     </div>
   );
 }
 
-export default App;
+function Swap() {
+  return (
+    <div>
+      <h2>!!! Swap !!!</h2>
+    </div>
+  );
+}
+
+function Liquidity() {
+  return (
+    <div>
+      <h2>!!! Liquidity !!!</h2>
+    </div>
+  );
+}
