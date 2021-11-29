@@ -1,0 +1,57 @@
+.Modal {
+    min-width: 300px;
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    background: var(--background-color);
+}
+
+.Header {
+    font-weight: bold;
+    font-size: 1.5rem;
+    line-height: 1.875rem;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.Header:hover svg {
+    cursor: pointer;
+}
+
+.Header:hover svg path {
+    fill: #1F86D3;
+}
+
+.Content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.Button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+
+    background: #46ADFA;
+    border-radius: 1rem;
+
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.25rem;
+
+    cursor: pointer;
+}
+
+.Button:hover {
+    background: #1F86D3;
+}

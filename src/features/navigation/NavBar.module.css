@@ -1,3 +1,10 @@
+nav {
+    flex: 0 1 auto;
+    bottom: 0;
+    width: 100%;
+    background: var(--background-color);
+}
+
 nav ul {
     width: 100%;
     display: flex;

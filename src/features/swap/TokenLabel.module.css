@@ -1,0 +1,15 @@
+.TokenLabel {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+
+    color: var(--text-main-color);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.25rem;
+}
+
+.TokenLabel svg {
+    width: auto;
+    height: 24px;
+}

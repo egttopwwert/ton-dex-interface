@@ -1,9 +1,15 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+
+// import accountReducer from "../features/account/accountReducer";
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    // account: accountReducer,
+    // wallet: walletReducer,
+    // tokens: tokensReducer,
+    // swapTransactions: swapTransactionsReducer,
+    // liquidityTransactions: liquidityTransactionsReducer,
+    // positions: positionsReducer,
   },
 });
 
