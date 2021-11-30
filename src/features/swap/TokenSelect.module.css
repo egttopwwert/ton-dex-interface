@@ -7,3 +7,18 @@
     border: 1px solid var(--border-color);
     border-radius: 16px;
 }
+
+.TokenSelectNoToken {
+    padding: 0.625rem 0.5rem;
+    color: var(--text-main-color);
+    background: #46ADFA !important;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--light-blue);
+}
+
+.TokenSelectNoToken:hover {
+    background-color: #1F86D3 !important;
+}

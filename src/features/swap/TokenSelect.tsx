@@ -15,24 +15,29 @@ import TokenLabel from "./TokenLabel";
 
 interface TokenSelectProps {
     tokenAddress: string;
+    exceptTokenAddress: string;
     onSelect: (tokenAddress: string) => void;
 };
 
-export const TokenSelect = ({ tokenAddress, onSelect }: TokenSelectProps) => {
+export const TokenSelect = ({ tokenAddress, exceptTokenAddress, onSelect }: TokenSelectProps) => {
 
     const [ isTokenSelectModalShown, toggleTokenSelectModal ] = useTokenSelectModal();
     const [ selectedTokenAddress, setSelectedTokenAdress ] = useState<string>(tokenAddress);
 
     return (
         <React.Fragment>
-            <div className={TokenSelectStyles.TokenSelect} onClick={toggleTokenSelectModal}>
-                <TokenLabel tokenAddress={selectedTokenAddress} />
+            <div 
+                className={ tokenAddress === "" ? TokenSelectStyles.TokenSelectNoToken : TokenSelectStyles.TokenSelect } 
+                onClick={toggleTokenSelectModal}
+            >
+                { tokenAddress === "" ? <span>Select token</span> : <TokenLabel tokenAddress={tokenAddress} /> }
                 <OpenSelectIcon />
             </div>
-            <TokenSelectModal 
+            <TokenSelectModal
+                exceptTokenAddress={exceptTokenAddress}
                 isModalShown={isTokenSelectModalShown}
                 toggleModal={toggleTokenSelectModal}
-                selectedTokenAddress={selectedTokenAddress}
+                tokenAddress={selectedTokenAddress}
                 onSelect={(tokenAddress) => { 
                     onSelect(tokenAddress); 
                     setSelectedTokenAdress(tokenAddress); 
@@ -46,7 +51,8 @@ export const TokenSelect = ({ tokenAddress, onSelect }: TokenSelectProps) => {
 export interface TokenSelectModalProps {
     isModalShown: boolean;
     toggleModal: () => void;
-    selectedTokenAddress: string;
+    tokenAddress: string;
+    exceptTokenAddress: string;
     onCancel?: () => void;
     onSelect?: (tokenAddress: string) => void;
 };
@@ -54,7 +60,8 @@ export interface TokenSelectModalProps {
 export const TokenSelectModal = ({
     isModalShown,
     toggleModal,
-    selectedTokenAddress,
+    tokenAddress,
+    exceptTokenAddress, // address of token that won't be showed in list of available to select tokens
     onCancel,
     onSelect,
 }: TokenSelectModalProps) => {
@@ -62,11 +69,13 @@ export const TokenSelectModal = ({
     const tokenAddresses = ["TON_address", "TKN1_address", "TKN2_address", "TKN3_address", "TKN4_address" ];
     const tokenBalances = [1000, 500, 300, 200, 50];
 
-    const [selectedTokenAdressIndex, setSelectedTokenAdressIndex] = useState(tokenAddresses.findIndex((tokenAddress) => {
-        return tokenAddress === selectedTokenAddress;
+    const [selectedTokenAdressIndex, setSelectedTokenAdressIndex] = useState(tokenAddresses.findIndex((currentTokenAddress) => {
+        return currentTokenAddress === tokenAddress;
     }));
 
     const renderedTokenAdressesListItems = tokenAddresses.map((tokenAddress, tokenAddressIndex) => {
+        if (tokenAddress === exceptTokenAddress) return null;
+
         return (
             <li 
                 key={tokenAddress}

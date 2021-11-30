@@ -4,10 +4,20 @@
     height: 100%;
 }
 
+h1 {
+    font-weight: bold;
+    font-size: 2rem;
+    line-height: 2.5rem;
+}
+
 section {
     flex: 1 1 auto;
     padding: 0 1em;
     overflow: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
 @media screen and (min-width: 870px) {
