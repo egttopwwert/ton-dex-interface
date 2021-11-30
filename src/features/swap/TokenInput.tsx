@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React from 'react';
 
 // components
 import { TokenSelect } from './TokenSelect';
@@ -7,62 +7,64 @@ import { TokenSelect } from './TokenSelect';
 import TokenInputStyles from "./TokenInput.module.css";
 
 export interface TokenInputProps {
-    tokenAddress: string;
+    selectedTokenAddress: string;
+    selectedTokenAmount: string,
+    selectedTokenBalance: number,
     exceptTokenAddress: string;
-    onInput: (tokenAddress: string, tokenAmount: number) => void;
+    onSelect: (tokenAddress: string) => void;
+    onInput: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
-export const TokenInput = ({ tokenAddress, exceptTokenAddress, onInput }: TokenInputProps) => {
+export const TokenInput = ({ 
+    selectedTokenAddress, 
+    selectedTokenAmount,
+    selectedTokenBalance,
+    exceptTokenAddress,
+    onSelect,
+    onInput
+}: TokenInputProps) => {
 
-    const tokenAddresses = ["TON_address", "TKN1_address", "TKN2_address", "TKN3_address", "TKN4_address" ];
-    const tokenBalances = [1000, 500, 300, 200, 50];
+    // const handleOnTokenSelect = (tokenAddress: string) => {
+    //     setSelectedTokenAddress(tokenAddress);
+    //     setSelectedTokenAmount("");
+    //     onInput(tokenAddress, 0);
+    // }
 
-    const getSelectedTokenAddressIndex = (selectedTokenAddress: string) => tokenAddresses.findIndex((tokenAddress) => {
-        return tokenAddress === selectedTokenAddress;
-    });
+    // const handleOnTokenAmountInput = (event: React.FormEvent<HTMLInputElement>) => {        
+    //     const tokenBalance = selectedTokenBalance ? selectedTokenBalance : 0;
+    //     const tokenAmount = parseFloat(event.currentTarget.value);
 
-    const [selectedTokenAddress, setSelectedTokenAddress] = useState<string>(tokenAddress);
-    const [selectedTokenAmount, setSelectedTokenAmount] = useState<string>("");
-    
-    const handleOnTokenSelect = (tokenAddress: string) => {
-        setSelectedTokenAddress(tokenAddress);
-        setSelectedTokenAmount("");
-        onInput(tokenAddress, 0);
-    }
-
-    const handleOnTokenAmountInput = (event: React.FormEvent<HTMLInputElement>) => {        
-        const tokenBalance = tokenBalances[getSelectedTokenAddressIndex(selectedTokenAddress)];
-        const tokenAmount = parseFloat(event.currentTarget.value);
-
-        if (tokenAmount > tokenBalance || tokenAmount < 0 ||  event.currentTarget.value.split(".")[1]?.length > 6) {
-            return;
-        }
-        else {
-            const t = event.currentTarget.value;
+    //     if (tokenAmount > tokenBalance || tokenAmount < 0 ||  event.currentTarget.value.split(".")[1]?.length > 6) {
+    //         return;
+    //     }
+    //     else {
+    //         const t = event.currentTarget.value;
             
-            if (t[0] === "0" && t[1] !== ".") {
-                setSelectedTokenAmount("0");
-                onInput(selectedTokenAddress, 0);
-            }
-            else {
-                setSelectedTokenAmount(t);
-                onInput(selectedTokenAddress, parseFloat(t) || 0);
-            }
-        }
-    };
+    //         if (t[0] === "0" && t[1] !== ".") {
+    //             setSelectedTokenAmount("0");
+    //             onInput(selectedTokenAddress, 0);
+    //         }
+    //         else {
+    //             setSelectedTokenAmount(t);
+    //             onInput(selectedTokenAddress, parseFloat(t) || 0);
+    //         }
+    //     }
+    // };
 
     return (
         <div className={TokenInputStyles.TokenInput}>
             <TokenSelect 
-                tokenAddress={selectedTokenAddress}
+                selectedTokenAddress={selectedTokenAddress}
+                selectedTokenAmount={selectedTokenAmount}
+                selectedTokenBalance={selectedTokenBalance}
                 exceptTokenAddress={exceptTokenAddress}
-                onSelect={handleOnTokenSelect}
+                onSelect={onSelect}
             />
             <input 
                 type="number" 
                 step="0.000001" 
                 className={TokenInputStyles.TokenAmountInput} 
-                onInput={handleOnTokenAmountInput}
+                onInput={onInput}
                 placeholder="0.0"
                 value={selectedTokenAmount}
             />

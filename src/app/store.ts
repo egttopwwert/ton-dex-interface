@@ -1,9 +1,12 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 
-// import accountReducer from "../features/account/accountReducer";
+import balanceReducer from "../features/account/balanceSlice";
+import tokens from "../features/account/tokensSlice";
 
 export const store = configureStore({
   reducer: {
+    balance: balanceReducer,
+    tokens: tokens,
     // account: accountReducer,
     // wallet: walletReducer,
     // tokens: tokensReducer,

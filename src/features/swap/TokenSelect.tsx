@@ -12,25 +12,38 @@ import { ReactComponent as CloseModalIcon } from "./CloseModalIcon.svg";
 
 // components
 import TokenLabel from "./TokenLabel";
+import { useAppSelector } from "../../app/hooks";
+import { selectBalances } from "../account/balanceSlice";
+import { selectTokens } from "../account/tokensSlice";
 
 interface TokenSelectProps {
-    tokenAddress: string;
+    selectedTokenAddress: string;
+    selectedTokenAmount: string;
+    selectedTokenBalance: number;
     exceptTokenAddress: string;
     onSelect: (tokenAddress: string) => void;
 };
 
-export const TokenSelect = ({ tokenAddress, exceptTokenAddress, onSelect }: TokenSelectProps) => {
+export const TokenSelect = ({ 
+    selectedTokenAddress, 
+    selectedTokenAmount,
+    selectedTokenBalance,
+    exceptTokenAddress,
+    onSelect
+}: TokenSelectProps) => {
 
     const [ isTokenSelectModalShown, toggleTokenSelectModal ] = useTokenSelectModal();
-    const [ selectedTokenAddress, setSelectedTokenAdress ] = useState<string>(tokenAddress);
+
+
+    // const [ selectedTokenAddress, setSelectedTokenAdress ] = useState<string>(tokenAddress);
 
     return (
         <React.Fragment>
             <div 
-                className={ tokenAddress === "" ? TokenSelectStyles.TokenSelectNoToken : TokenSelectStyles.TokenSelect } 
+                className={ selectedTokenAddress === "" ? TokenSelectStyles.TokenSelectNoToken : TokenSelectStyles.TokenSelect } 
                 onClick={toggleTokenSelectModal}
             >
-                { tokenAddress === "" ? <span>Select token</span> : <TokenLabel tokenAddress={tokenAddress} /> }
+                { selectedTokenAddress === "" ? <span>Select token</span> : <TokenLabel tokenAddress={selectedTokenAddress} /> }
                 <OpenSelectIcon />
             </div>
             <TokenSelectModal
@@ -38,10 +51,7 @@ export const TokenSelect = ({ tokenAddress, exceptTokenAddress, onSelect }: Toke
                 isModalShown={isTokenSelectModalShown}
                 toggleModal={toggleTokenSelectModal}
                 tokenAddress={selectedTokenAddress}
-                onSelect={(tokenAddress) => { 
-                    onSelect(tokenAddress); 
-                    setSelectedTokenAdress(tokenAddress); 
-                }}
+                onSelect={onSelect}
             />
         </React.Fragment>
     );
@@ -66,24 +76,29 @@ export const TokenSelectModal = ({
     onSelect,
 }: TokenSelectModalProps) => {
     
-    const tokenAddresses = ["TON_address", "TKN1_address", "TKN2_address", "TKN3_address", "TKN4_address" ];
-    const tokenBalances = [1000, 500, 300, 200, 50];
+    // const tokenAddresses = ["TON_address", "SOME_address", "SQUID_address"];
+    // const tokenBalances = [1000, 500, 300, 200, 50];
 
-    const [selectedTokenAdressIndex, setSelectedTokenAdressIndex] = useState(tokenAddresses.findIndex((currentTokenAddress) => {
-        return currentTokenAddress === tokenAddress;
-    }));
+    const tokens = useAppSelector((state) => selectTokens(state));
+    const balances = useAppSelector((state) => selectBalances(state));
 
-    const renderedTokenAdressesListItems = tokenAddresses.map((tokenAddress, tokenAddressIndex) => {
-        if (tokenAddress === exceptTokenAddress) return null;
+    const [selectedTokenAdress, setSelectedTokenAdress] = useState<string>(tokenAddress);
+
+    const renderedTokenAdressesListItems = tokens.map(({ address }) => {
+        if (address === exceptTokenAddress) return null;
+
+        const balance = balances.find(({ tokenAddress }) => {
+            return tokenAddress === address;
+        });
 
         return (
             <li 
-                key={tokenAddress}
-                onClick={() => setSelectedTokenAdressIndex(tokenAddressIndex)}
-                className={ `${TokenSelectModalStyles.TableItem} ${ (tokenAddressIndex === selectedTokenAdressIndex) ? TokenSelectModalStyles.ActiveTableItem : null}` }
+                key={address}
+                onClick={() => setSelectedTokenAdress(address)}
+                className={ `${TokenSelectModalStyles.TableItem} ${ (address === selectedTokenAdress) ? TokenSelectModalStyles.ActiveTableItem : null}` }
             >
-                <TokenLabel tokenAddress={tokenAddress} />
-                <span className={TokenSelectModalStyles.TokenBalance}>{ tokenBalances[tokenAddressIndex] }</span>
+                <TokenLabel tokenAddress={address} />
+                <span className={TokenSelectModalStyles.TokenBalance}>{ balance ? balance.tokenBalance : 0 }</span>
             </li>
         );
     });
@@ -99,7 +114,7 @@ export const TokenSelectModal = ({
                 { renderedTokenAdressesListItems }
             </ul>
 
-            <div className={ModalStyles.Button} onClick={() => { if (onSelect) { onSelect(tokenAddresses[selectedTokenAdressIndex]); } toggleModal(); }}>
+            <div className={ModalStyles.Button} onClick={() => { if (onSelect) { onSelect(selectedTokenAdress); } toggleModal(); }}>
                 Select
             </div>
         </div>
